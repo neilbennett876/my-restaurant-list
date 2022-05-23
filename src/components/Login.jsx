@@ -1,6 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth"
 import { Button, Form, Input } from "antd";
+import { useContext } from "react";
+import { UserContext } from "../App";
 
 
 const firebaseConfig = {
@@ -13,7 +15,8 @@ const firebaseConfig = {
 };
 
 
-export default function Login({setUser}) {
+export default function Login() {
+    const { user, setUser } = useContext(UserContext)
     const handleLogin = ({ email, password }) => {
         const app = initializeApp(firebaseConfig); //connect to firebase
         const auth = getAuth(app) //connect to firebase authentification
@@ -33,7 +36,7 @@ export default function Login({setUser}) {
     return(
         <section style={{padding: '2em'}}>
 
-            <Form
+           {user &&  <Form
             onFinish={handleLogin}
             labelCol={{span: 8}}
             wrapperCol={{span: 16}}
@@ -50,7 +53,7 @@ export default function Login({setUser}) {
                 <Form.Item wrapperCol={{span: 16, offset: 8}}>
                     <Button onClick={handleGoogleLogin}>Google Login</Button>
                 </Form.Item>
-            </Form>
+            </Form>}
         </section>
     )
 }
