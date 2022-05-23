@@ -1,10 +1,8 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth"
 import { Button, Form, Input } from "antd";
 
-// Your web app's Firebase configuration
+
 const firebaseConfig = {
   apiKey: "AIzaSyBOmqApRyG5ynHEwI9MI-ecfv7wsjc1bo8",
   authDomain: "my-first-firestore-nb.firebaseapp.com",
@@ -14,25 +12,43 @@ const firebaseConfig = {
   appId: "1:661912733015:web:7f6d41b313e3ca0a9dea12"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
 
-export default function Login() {
+export default function Login({setUser}) {
+    const handleLogin = ({ email, password }) => {
+        const app = initializeApp(firebaseConfig); //connect to firebase
+        const auth = getAuth(app) //connect to firebase authentification
+        //login with firebase auth
+        signInWithEmailAndPassword(auth, email, password)
+        .then(res => setUser(res.user))
+        .catch(console.error)
+    }
+    const handleGoogleLogin= () =>{
+        const app = initializeApp(firebaseConfig)
+        const auth = getAuth(app)
+        const provider = new GoogleAuthProvider()
+        signInWithPopup(auth, provider)
+                .then(res => setUser(res.user))
+        .catch(console.error)
+    }
     return(
         <section style={{padding: '2em'}}>
 
-            <Form 
+            <Form
+            onFinish={handleLogin}
             labelCol={{span: 8}}
             wrapperCol={{span: 16}}
             >
-                <Form.Item label="Email" name="email">
+                <Form.Item label="Email" name="email" rules={[{required: true, message: 'Enter a valid email, please 😀'}]}>
                     <Input/>
-                </Form.Item>
-                <Form.Item label="Password" name="password">
+                </Form.Item >
+                <Form.Item label="Password" name="password" rules={[{required: true, message: 'Please enter your password!'}]}>
                     <Input.Password/>
                 </Form.Item>
                 <Form.Item wrapperCol={{span: 16, offset: 8}}>
                     <Button type="primary" htmlType="submit">Login</Button>
+                </Form.Item>
+                <Form.Item wrapperCol={{span: 16, offset: 8}}>
+                    <Button onClick={handleGoogleLogin}>Google Login</Button>
                 </Form.Item>
             </Form>
         </section>

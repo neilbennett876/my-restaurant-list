@@ -8,7 +8,7 @@ function RestaurantList () {
     useEffect(()=>{
         
         //fetch our API
-        fetch("https://my-first-firestore-nb.web.app/restaurants/{")
+        fetch("https://my-first-firestore-nb.web.app/restaurants")
         .then(response => response.json())
         .then(data => setRestaurants(data))
         .catch(console.error)
